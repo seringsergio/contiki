@@ -70,8 +70,8 @@ static struct unicast_conn uc;
 PROCESS_THREAD(example_unicast_process, ev, data)
 {
 
-  unsigned short id = 1; // This is the ID which will be set in your sky mote
-  //unsigned short id = 2; // This is the ID which will be set in your sky mote
+  //unsigned short id = 1; // This is the ID which will be set in your sky mote
+  unsigned short id = 2; // This is the ID which will be set in your sky mote
 
   PROCESS_EXITHANDLER(unicast_close(&uc);)
     
@@ -93,8 +93,8 @@ PROCESS_THREAD(example_unicast_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
     packetbuf_copyfrom("Hello", 5);
-    addr.u8[0] = 2;
-    //addr.u8[0] = 1;
+    //addr.u8[0] = 2;
+    addr.u8[0] = 1;
     addr.u8[1] = 0;
     if(!linkaddr_cmp(&addr, &linkaddr_node_addr)) {
       unicast_send(&uc, &addr);

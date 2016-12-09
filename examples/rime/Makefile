@@ -5,4 +5,5 @@ all: example-abc example-mesh example-collect example-trickle example-polite \
      example-runicast example-unicast example-neighbors
 
 CONTIKI_WITH_RIME = 1
+CFLAGS += -DPROJECT_CONF_H=\"project-conf.h\"
 include $(CONTIKI)/Makefile.include
