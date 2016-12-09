@@ -87,8 +87,8 @@ PROCESS_THREAD(example_unicast_process, ev, data)
     linkaddr_t addr;
         
     /* Delay 2-4 seconds */
-    //etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
-    etimer_set(&et, CLOCK_SECOND * 5);
+    etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
+    //etimer_set(&et, CLOCK_SECOND * 5);
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
@@ -97,7 +97,7 @@ PROCESS_THREAD(example_unicast_process, ev, data)
     //addr.u8[0] = 1;
     addr.u8[1] = 0;
     if(!linkaddr_cmp(&addr, &linkaddr_node_addr)) {
-      unicast_send(&uc, &addr);
+      //unicast_send(&uc, &addr);
     }
 
   }

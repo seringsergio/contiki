@@ -88,7 +88,7 @@ PROCESS_THREAD(example_unicast_process, ev, data)
         
     /* Delay 2-4 seconds */
     //etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
-    etimer_set(&et, CLOCK_SECOND * 5);
+    etimer_set(&et, CLOCK_SECOND * 2);
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 

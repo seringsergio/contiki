@@ -1,0 +1,15 @@
+1. Si
+
+#define NETSTACK_CONF_RDC     contikimac_driver // Define the RDC driver to use
+
+Los paquetes llegan cuando quieren. Cuando se les da la gana. Se envia el paquete en t = 0 seg...y el paquete llega en t = 10 segundos o en t = 5 segundos...no es deterministico
+
+2. Si
+
+#define NETSTACK_CONF_RDC     nullrdc_driver // Define the RDC driver to use
+
+Los paquetes llegan deterministicamente. Es decir, el paquete se envia y llega de inmediato al otro lado. Lo malo de tener nullrdc_driver, es que la sincronizacion se daña (Offset cambia mucho, varia muchisimo!)
+
+
+3. conclusion . Toca mirar contikimac_driver para que tenga los dos comportamientos: 1) que los paquetes lleguen deterministicamente (se envia y llega de inmediato) y que funcione la sincronizacion (offset simpre igual (+-) )
+
