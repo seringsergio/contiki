@@ -1,0 +1,26 @@
+#Comandos linux
+
+//Buscar: Buscar archivos en linux
+find / -type f -name "*.conf"
+
+//Buscar directorios en linux
+find /  -type d  -name "rssi-scanner"
+
+//Buscar: Buscar un string dentro de archivos de linux
+grep -rnw '/home/sink/Desktop/contiki/' -e "ContikiMAC"
+
+//Matar proceso: Matar proceso en linux
+kill -KILL PID_of_target_process
+
+//Mirar conexiones seriales
+dmesg | grep tty
+
+//Buscar en que archivo esta una "palabra"
+
+grep -lr "Palabra" /home/
+
+//Abrir minicom en modo configuracion 
+
+minicom -s
+
+

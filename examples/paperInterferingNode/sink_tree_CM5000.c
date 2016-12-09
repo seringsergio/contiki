@@ -32,72 +32,99 @@
 
 /**
  * \file
- *         Best-effort single-hop unicast example
+ *         Example of how the collect primitive works.
  * \author
  *         Adam Dunkels <adam@sics.se>
  */
 
 #include "contiki.h"
+#include "lib/random.h"
 #include "net/rime/rime.h"
+#include "net/rime/collect.h"
+#include "dev/leds.h"
+#include "dev/button-sensor.h"
+
+#include "net/netstack.h"
+
 #include <stdio.h>
+
+//Sergio
 #include "sys/node-id.h" // Include this library in order to be able to set node's ID.
-#include "/home/sink/Desktop/contiki/dev/cc2420/cc2420.h" // Include the CC2420 library
-/*---------------------------------------------------------------------------*/
-PROCESS(example_unicast_process, "Example unicast");
-AUTOSTART_PROCESSES(&example_unicast_process);
-/*---------------------------------------------------------------------------*/
-static void
-recv_uc(struct unicast_conn *c, const linkaddr_t *from)
-{
-  printf("unicast message received from %d.%d\n\r",
-	 from->u8[0], from->u8[1]);
-}
-/*---------------------------------------------------------------------------*/
-static void
-sent_uc(struct unicast_conn *c, int status, int num_tx)
-{
-  const linkaddr_t *dest = packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
-  if(linkaddr_cmp(dest, &linkaddr_null)) {
-    return;
-  }
-  printf("unicast message sent to %d.%d: status %d num_tx %d\n\r",
-    dest->u8[0], dest->u8[1], status, num_tx);
-}
-/*---------------------------------------------------------------------------*/
-static const struct unicast_callbacks unicast_callbacks = {recv_uc, sent_uc};
-static struct unicast_conn uc;
-/*---------------------------------------------------------------------------*/
-PROCESS_THREAD(example_unicast_process, ev, data)
-{
+#include "/home/sink/Desktop/contiki-3.0/dev/cc2420/cc2420.h" // Include the CC2420 library
 
+static struct collect_conn tc;
+
+/*---------------------------------------------------------------------------*/
+PROCESS(example_collect_process, "Test collect process");
+AUTOSTART_PROCESSES(&example_collect_process);
+/*---------------------------------------------------------------------------*/
+static void
+recv(const linkaddr_t *originator, uint8_t seqno, uint8_t hops)
+{
+  printf("Sink got message from %d.%d, seqno %d, hops %d: len %d '%s'\n",
+	 originator->u8[0], originator->u8[1],
+	 seqno, hops,
+	 packetbuf_datalen(),
+	 (char *)packetbuf_dataptr());
+}
+/*---------------------------------------------------------------------------*/
+static const struct collect_callbacks callbacks = { recv };
+/*---------------------------------------------------------------------------*/
+PROCESS_THREAD(example_collect_process, ev, data)
+{
+  static struct etimer periodic;
+  static struct etimer et;
   unsigned short id = 1; // This is the ID which will be set in your sky mote
-  //unsigned short id = 2; // This is the ID which will be set in your sky mote
 
-  PROCESS_EXITHANDLER(unicast_close(&uc);)
-    
   PROCESS_BEGIN();
 
-  node_id_burn(id); // Call this function to burn the defined id
-  
-  unicast_open(&uc, 146, &unicast_callbacks);
   cc2420_set_txpower(3); //Min value. Set the output power of the node
-  
+  //cc2420_set_txpower(31); //Max value. Set the output power of the node
+  node_id_burn(id); // Call this function to burn the defined id
+
+  collect_open(&tc, 130, COLLECT_ROUTER, &callbacks);
+
+  if(linkaddr_node_addr.u8[0] == 1 &&
+     linkaddr_node_addr.u8[1] == 0) {
+	printf("I am sink\n");
+	collect_set_sink(&tc, 1);
+  }
+
+  /* Allow some time for the network to settle. */
+  etimer_set(&et, 120 * CLOCK_SECOND);
+  PROCESS_WAIT_UNTIL(etimer_expired(&et));
+
   while(1) {
-    static struct etimer et;
-    linkaddr_t addr;
-        
-    /* Delay 2-4 seconds */
-    etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
-    //etimer_set(&et, CLOCK_SECOND);
 
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+    /* Send a packet every 30 seconds. */
+    if(etimer_expired(&periodic)) {
+      etimer_set(&periodic, CLOCK_SECOND * 30);
+      etimer_set(&et, random_rand() % (CLOCK_SECOND * 30));
+    }
 
-    packetbuf_copyfrom("Hello", 5);
-    addr.u8[0] = 2;
-    //addr.u8[0] = 1;
-    addr.u8[1] = 0;
-    if(!linkaddr_cmp(&addr, &linkaddr_node_addr)) {
-      unicast_send(&uc, &addr);
+    PROCESS_WAIT_EVENT();
+
+
+    if(etimer_expired(&et)) {
+      static linkaddr_t oldparent;
+      const linkaddr_t *parent;
+
+      printf("Sending\n");
+      packetbuf_clear();
+      packetbuf_set_datalen(sprintf(packetbuf_dataptr(),
+				  "%s", "id=1") + 1);
+      collect_send(&tc, 15);
+
+      parent = collect_parent(&tc);
+      if(!linkaddr_cmp(parent, &oldparent)) {
+        if(!linkaddr_cmp(&oldparent, &linkaddr_null)) {
+          printf("#L %d 0\n", oldparent.u8[0]);
+        }
+        if(!linkaddr_cmp(parent, &linkaddr_null)) {
+          printf("#L %d 1\n", parent->u8[0]);
+        }
+        linkaddr_copy(&oldparent, parent);
+      }
     }
 
   }

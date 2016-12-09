@@ -1,0 +1,102 @@
+#Comandos Mysql
+
+//Version: Saber la version de Mysql
+mysql --version
+
+//Status: Saber el estado de mysql
+service mysql status
+mysqladmin -p -u root version
+
+//Entrar a mysql: La clave es 1234
+ mysql -u root -p
+
+//Crear una base de datos
+CREATE DATABASE dbname;
+
+//Mostrar: Mostrar bases de datos.
+show databases;
+
+//Seleccionar: Seleccionar database
+USE mote1;
+
+//Tabla: Crear tabla dentro de la base de datos
+CREATE TABLE Variables (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, temperature INT(4), light INT(4));
+
+create table weatherData (
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+tempC decimal(6,2) NOT NULL,
+light decimal(6,2) NOT NULL
+);
+
+create table weatherData (
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+tempC INT(4) NOT NULL,
+light INT(4) NOT NULL
+);
+
+create table weatherData (
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+secuencia INT(11) NOT NULL,
+tempC INT(4) NOT NULL,
+light INT(4) NOT NULL
+);
+
+create table LinkStatistics (
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nodeID DECIMAL(5,2) NOT NULL, //The first argument is precision, which is the number of total digits. The second argument is scale which is the maximum number of digits to the right of the decimal point. Thus, (4,2) can be anything from -99.99 to 99.99.
+secuencia INT(11) NOT NULL,
+tempC INT(4) NOT NULL,
+light INT(4) NOT NULL,
+RSSI  INT(4) NOT NULL,
+LQI   INT(4) NOT NULL
+);
+
+create table LinkStatistics (
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nodeID DECIMAL(5,2) NOT NULL, 
+secuencia INT(11) NOT NULL,
+tempC INT(4) NOT NULL,
+light INT(4) NOT NULL,
+RSSI  INT(4) NOT NULL,
+LQI   INT(4) NOT NULL
+);
+
+//Mostrar Tablas:
+show tables;
+
+//Insertar: Insertar algo dentro de la tabla.
+INSERT INTO weatherData (id, tempC, light) VALUES (NULL, 30, 200);
+INSERT INTO LinkStatistics (id, nodeID, secuencia, tempC, light, RSSI, LQI) VALUES (NULL, 2.0 ,1, 30, 200, -74, 107 );
+
+
+//Ver: Ver valores insertados en la base de datos
+select * from weatherData;
+select * from LinkStatistics;
+
+//Eliminar: Elimina tabla
+DROP TABLE weatherData;
+DROP TABLE LinkStatistics;
+
+//Borrar datos de una tabla
+DELETE FROM weatherData;
+DELETE FROM LinkStatistics;
+
+//Reset AUTO_INCREMENT a 1
+ALTER TABLE weatherData AUTO_INCREMENT = 1;
+
+//Propiedades: Ver las propiedades de una tabla
+SHOW COLUMNS FROM weatherData;
+SHOW COLUMNS FROM LinkStatistics;
+
+//Sacar datos en un csv file.Get a csv file. 
+
+
+SELECT "id","nodeID","secuencia","tempC","light","RSSI","LQI","timestamp"
+UNION ALL
+SELECT *
+FROM LinkStatistics
+INTO OUTFILE "/var/lib/mysql-files/LinkStatistics.csv"
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+

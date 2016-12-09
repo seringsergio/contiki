@@ -1,0 +1,49 @@
+#Comandos Contiki
+
+//Limpiar
+make clean
+
+//GUARDAR: save the target
+make TARGET=sky savetarget
+
+//Lista: Muestra una lista de los motes conectados
+make TARGET=sky sky-motelist 
+make TARGET=sky sky-motes
+
+
+//Compilar un codigo
+make TARGET=sky example-broadcast //comando para el cm5000
+make TARGET=zoul 01-hello-world  //comando para el re-mote
+
+//Upload: Cargar codigo en el mote
+make TARGET=sky MOTES=/dev/ttyUSB0 TemperatureSky.upload
+make TARGET=sky MOTES=/dev/ttyUSB0 example-abc.upload
+make TARGET=sky MOTES=/dev/ttyUSB0 hello-world.upload
+make TARGET=sky MOTES=/dev/ttyUSB1 hello-world.upload // comando para el sky
+make TARGET=zoul 01-hello-world.upload //comando para el re-mote
+make NODEID=0x0100 TARGET=zoul MOTES=/dev/ttyUSB0 sink-channelQuality.upload // Para agregar el ID a los remote
+make TARGET=zoul MOTES=/dev/ttyUSB2 node-environment_remote.upload // Para agregar el ID a los remote
+make NODEID=0x0100 TARGET=zoul MOTES=/dev/ttyUSB2 sink-channelQuality_remote.upload
+
+make TARGET=sky MOTES=/dev/ttyUSB0 example-uni-temp-sink.upload
+make TARGET=sky MOTES=/dev/ttyUSB1 example-uni-temp-node.upload
+make TARGET=sky MOTES=/dev/ttyUSB2 example-uni-temp-nodeInterferencia.upload
+
+//PARA programar
+msp430-bsl-telosb -p /dev/ttyUSB0 -r -e -v -i ihex -P /home/doctorado/contiki-3.0/examples/hello-world/hello-world.ihex 
+
+// PARA hacer login
+/home/doctorado/contiki-3.0/tools/sky/serialdump-linux -b115200 /dev/ttyUSB0
+
+
+// Make login al puerto que YO quiero
+
+make login MOTES=/dev/ttyUSB0 
+
+//Abrir el analizador de espectros
+cd /home/sink/Desktop/contiki-3.0/examples/rssi-scanner
+make TARGET=sky MOTES=/dev/ttyUSB1 rssi-scanner-cc2420.upload
+make login MOTES=/dev/ttyUSB1 | java ViewRSSI
+
+//Recordar como no sale el error de wrong password
+make  TARGET=sky node-environment.upload

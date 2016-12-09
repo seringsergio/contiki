@@ -1,0 +1,71 @@
+git checkout master
+git checkout iot-workshop
+git checkout sergio
+
+git show-branch
+git branch
+
+cd /home/sink/Desktop/contiki-3.0
+git init
+git status
+git add -A
+git commit -m "Mensaje de Commit"
+git remote add origin https://github.com/seringsergio/Contiki_v3.0.git
+git remote add origin https://github.com/seringsergio/contiki.git
+git remote add sergio https://github.com/seringsergio/contiki.git
+git remote -v
+git push
+git push sergio master
+git push origin iot-workshop
+
+git init
+git checkout iot-workshop
+//git checkout master
+git status
+git add -A
+git commit -m "Mensaje de Commit"
+//git push origin master
+//git push origin iot-workshop
+//git push sergio master
+git push sergio iot-workshop
+
+PASOS DE GITHUB
+
+1. clonar contiki OS
+
+cd /home/sink/Desktop/
+git clone https://github.com/contiki-os/contiki.git
+
+//Genera la carpeta /contiki
+
+2. Agregar la branch del libro IoT en 5 Dias
+
+//Ir a la carpeta de /contiki recien creada
+
+
+
+cd /home/sink/Desktop/contiki
+git remote add iot-workshop https://github.com/alignan/contiki
+git remote -v
+git fetch iot-workshop
+git checkout iot-workshop
+
+3. Agregar el repositorio de uno y hacer un push
+
+git remote add sergio https://github.com/seringsergio/contiki.git
+git remote -v
+//git fetch sergio
+git push -u sergio master
+
+4. Agregar mis carpetas /sergioDiaz /paperInterferencianodo y hacer push
+
+git status
+git add -A
+git commit -m "Mensaje de Commit"
+git push -u sergio iot-workshop
+
+
+
+
+
+
