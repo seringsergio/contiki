@@ -43,9 +43,31 @@
 #include "sys/node-id.h" // Include this library in order to be able to set node's ID.
 #include "/home/sink/Desktop/contiki/dev/cc2420/cc2420.h" // Include the CC2420 library
 #include "node-environment_CM5000.h"  // Declares the struct environment
+#include "/home/sink/Desktop/contiki/dev/sht11/sht11-sensor.h" // To include the sensors
+#include "/home/sink/Desktop/contiki/platform/sky/dev/light-sensor.h" // To include the sensors
+
+
 /*---------------------------------------------------------------------------*/
 PROCESS(example_unicast_process, "Example unicast");
-AUTOSTART_PROCESSES(&example_unicast_process);
+PROCESS(read_temperature_light, "Reads the Sensors Information"); // Process for reading the temperature and light values
+AUTOSTART_PROCESSES(&example_unicast_process, &read_temperature_light);
+/*---------------------------------------------------------------------------*/
+struct environment envir; // Struct used to store the temperature and light values  
+int sequence = 0; // A sequence number that enumerates the data from 0 and increases in 1 each time.
+
+/*---------------------------------------------------------------------------*/
+static int
+get_light(void) //Get the light value from sensor
+{
+  return 10 * light_sensor.value(LIGHT_SENSOR_PHOTOSYNTHETIC) / 7;
+}
+/*---------------------------------------------------------------------------*/
+static int
+get_temp(void) //Get the temperature value from sensor
+{
+  return ((sht11_sensor.value(SHT11_SENSOR_TEMP) / 10) - 396) / 10;
+}
+
 /*---------------------------------------------------------------------------*/
 static void
 recv_uc(struct unicast_conn *c, const linkaddr_t *from)
@@ -68,40 +90,107 @@ sent_uc(struct unicast_conn *c, int status, int num_tx)
 static const struct unicast_callbacks unicast_callbacks = {recv_uc, sent_uc};
 static struct unicast_conn uc;
 /*---------------------------------------------------------------------------*/
+PROCESS_THREAD(read_temperature_light, ev, data)  // Process for reading the temperature and light values
+{
+
+  static struct etimer et; // Struct used for the timer
+  int temporal; //Temporal Variable
+
+  PROCESS_BEGIN();  // Says where the process starts 
+
+
+  while(1){
+  
+  etimer_set(&et, CLOCK_SECOND * 5); // Configure timer to expire in 5 seconds
+ 
+  SENSORS_ACTIVATE(light_sensor); // Activate light sensor
+  SENSORS_ACTIVATE(sht11_sensor); // Activate temperature sensor
+ 
+  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et)); // Wait until timer expires 
+ 
+  /*printf("Data\t"); // Print the string "Data"
+  sequence++;
+  printf("%d\t", sequence);  // Print the sequence number
+  envir.sequence = sequence; // To save the sequence in the struct envir
+  temporal = get_temp();
+  printf("%d\t", temporal ); // Print the temperature value
+  envir.temp = temporal; // To save the temperature in the struct envir
+  temporal = get_light();
+  printf("%d\n", temporal );  // Print the light value
+  envir.light = temporal; // To save the light in the struct envir*/
+  
+  //printf("Data/"); // Print the string "Data"
+  sequence++;
+  //printf("%d/", sequence);  // Print the sequence number
+  envir.sequence = sequence; // To save the sequence in the struct envir
+  temporal = get_temp();
+  //printf("%d/", temporal ); // Print the temperature value
+  envir.temp = temporal; // To save the temperature in the struct envir
+  temporal = get_light();
+  //printf("%d\n\r", temporal );  // Print the light value
+  envir.light = temporal; // To save the light in the struct envir
+
+  process_post(&example_unicast_process, PROCESS_EVENT_CONTINUE , &(envir) ); // This function posts an asynchronous event to the process example_unicast_process with the information of the structure called envir
+ 
+  etimer_reset(&et); // Reset timer
+ 
+  SENSORS_DEACTIVATE(light_sensor); // Deactivate light sensor
+  SENSORS_DEACTIVATE(sht11_sensor);  // Deactivate temperature sensor
+  
+  }
+  
+  PROCESS_END();//Says where the process ends
+
+}
+
+/*---------------------------------------------------------------------------*/
+
 PROCESS_THREAD(example_unicast_process, ev, data)
 {
 
   //unsigned short id = 1; // This is the ID which will be set in your sky mote
   unsigned short id = 2; // This is the ID which will be set in your sky mote
-  struct environment envirRX; //Saves the information that comes from the other process (read_temperature_light) into a structure pointer
+  struct environment *envirRX =  data; //Saves the information that comes from the other process (read_temperature_light) into a
 
   PROCESS_EXITHANDLER(unicast_close(&uc);)
     
   PROCESS_BEGIN();
 
   node_id_burn(id); // Call this function to burn the defined id
-  
+  timesynch_set_authority_level(id); 
   unicast_open(&uc, 146, &unicast_callbacks);
   cc2420_set_txpower(3); //Min value. Set the output power of the node
   
   while(1) {
-    static struct etimer et;
+    //static struct etimer et;
     linkaddr_t addr;
         
     /* Delay 2-4 seconds */
     //etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
-    etimer_set(&et, CLOCK_SECOND * 1);
+    //etimer_set(&et, CLOCK_SECOND * 1);
 
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+    //PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+    PROCESS_WAIT_EVENT(); //Wait for an event to be posted to the process. 
+
+    printf("Data/"); // Print the string "Data"
+    printf("%d/", envirRX->sequence );  // Print the sequence number
+    printf("%d/", envirRX->temp ); // Print the temperature value
+    printf("%d : ", envirRX->light );  // Print the light value
 
     //printf( "bytes PKT = %d \n\r" ,       packetbuf_copyfrom(  &envirRX , sizeof(  (envirRX)  ) ) );
     //printf( "bytes PKT = %d \n\r" , packetbuf_copyfrom("Hello", 5) );
-    packetbuf_copyfrom("Hello", 5);
+    //packetbuf_copyfrom("Hello", 5);
 
     //addr.u8[0] = 2;
     addr.u8[0] = 1;
     addr.u8[1] = 0;
     if(!linkaddr_cmp(&addr, &linkaddr_node_addr)) {
+#if TIMESYNCH_CONF_ENABLED
+      envirRX->timestamp = timesynch_time();
+#else
+      envirRX->timestamp = 0;
+#endif
+      packetbuf_copyfrom(  envirRX , sizeof(  (*envirRX)  ) ); 
       unicast_send(&uc, &addr);
     }
 
