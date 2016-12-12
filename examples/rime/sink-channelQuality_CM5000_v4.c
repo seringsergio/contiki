@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include "sys/node-id.h" // Include this library in order to be able to set node's ID.
 #include "/home/sink/Desktop/contiki/dev/cc2420/cc2420.h" // Include the CC2420 library
+#include "node-environment_CM5000.h"  // Declares the struct environment
 /*---------------------------------------------------------------------------*/
 PROCESS(example_unicast_process, "Example unicast");
 AUTOSTART_PROCESSES(&example_unicast_process);
@@ -87,8 +88,8 @@ PROCESS_THREAD(example_unicast_process, ev, data)
     linkaddr_t addr;
         
     /* Delay 2-4 seconds */
-    etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
-    //etimer_set(&et, CLOCK_SECOND * 5);
+    //etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
+    etimer_set(&et, CLOCK_SECOND * 1);
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 

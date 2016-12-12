@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include "sys/node-id.h" // Include this library in order to be able to set node's ID.
 #include "/home/sink/Desktop/contiki/dev/cc2420/cc2420.h" // Include the CC2420 library
+#include "node-environment_CM5000.h"  // Declares the struct environment
 /*---------------------------------------------------------------------------*/
 PROCESS(example_unicast_process, "Example unicast");
 AUTOSTART_PROCESSES(&example_unicast_process);
@@ -72,6 +73,7 @@ PROCESS_THREAD(example_unicast_process, ev, data)
 
   //unsigned short id = 1; // This is the ID which will be set in your sky mote
   unsigned short id = 2; // This is the ID which will be set in your sky mote
+  struct environment envirRX; //Saves the information that comes from the other process (read_temperature_light) into a structure pointer
 
   PROCESS_EXITHANDLER(unicast_close(&uc);)
     
@@ -88,11 +90,14 @@ PROCESS_THREAD(example_unicast_process, ev, data)
         
     /* Delay 2-4 seconds */
     //etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND * 4));
-    etimer_set(&et, CLOCK_SECOND * 2);
+    etimer_set(&et, CLOCK_SECOND * 1);
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
-    packetbuf_copyfrom("Hello", 5);
+    printf( "bytes PKT = %d \n\r" ,       packetbuf_copyfrom(  &envirRX , sizeof(  (envirRX)  ) ) );
+    //printf( "bytes PKT = %d \n\r" , packetbuf_copyfrom("Hello", 5) );
+    //packetbuf_copyfrom("Hello", 5);
+
     //addr.u8[0] = 2;
     addr.u8[0] = 1;
     addr.u8[1] = 0;
