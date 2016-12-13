@@ -61,17 +61,30 @@ RSSI  INT(4) NOT NULL,
 LQI   INT(4) NOT NULL
 );
 
+create table LinkStatisticsPaper (
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nodeID DECIMAL(5,2) NOT NULL, 
+secuencia INT(11) NOT NULL,
+tempC INT(4) NOT NULL,
+light INT(4) NOT NULL,
+RSSI  INT(4) NOT NULL,
+LQI   INT(4) NOT NULL,
+latency   INT(4) NOT NULL,
+date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 //Mostrar Tablas:
 show tables;
 
 //Insertar: Insertar algo dentro de la tabla.
 INSERT INTO weatherData (id, tempC, light) VALUES (NULL, 30, 200);
 INSERT INTO LinkStatistics (id, nodeID, secuencia, tempC, light, RSSI, LQI) VALUES (NULL, 2.0 ,1, 30, 200, -74, 107 );
-
+INSERT INTO LinkStatisticsPaper (id, nodeID, secuencia, tempC, light, RSSI, LQI, latency) VALUES (NULL, 2.0 ,18, 22, 191, 64, 107, 85 );
 
 //Ver: Ver valores insertados en la base de datos
 select * from weatherData;
 select * from LinkStatistics;
+select * from LinkStatisticsPaper;
 
 //Eliminar: Elimina tabla
 DROP TABLE weatherData;
@@ -87,6 +100,7 @@ ALTER TABLE weatherData AUTO_INCREMENT = 1;
 //Propiedades: Ver las propiedades de una tabla
 SHOW COLUMNS FROM weatherData;
 SHOW COLUMNS FROM LinkStatistics;
+SHOW COLUMNS FROM LinkStatisticsPaper;
 
 //Sacar datos en un csv file.Get a csv file. 
 

@@ -29,6 +29,11 @@ make TARGET=sky MOTES=/dev/ttyUSB0 example-uni-temp-sink.upload
 make TARGET=sky MOTES=/dev/ttyUSB1 example-uni-temp-node.upload
 make TARGET=sky MOTES=/dev/ttyUSB2 example-uni-temp-nodeInterferencia.upload
 
+
+make MOTES=/dev/ttyUSB2 node-environment_CM5000_v4.upload && make login MOTES=/dev/ttyUSB2
+make MOTES=/dev/ttyUSB1 sink-channelQuality_CM5000_v4.upload && make login MOTES=/dev/ttyUSB1
+
+
 //PARA programar
 msp430-bsl-telosb -p /dev/ttyUSB0 -r -e -v -i ihex -P /home/doctorado/contiki-3.0/examples/hello-world/hello-world.ihex 
 
