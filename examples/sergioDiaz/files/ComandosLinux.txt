@@ -23,4 +23,6 @@ grep -lr "Palabra" /home/
 
 minicom -s
 
+// Que no se apague la pantalla
+xfce4-power-manager
 

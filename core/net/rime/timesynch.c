@@ -143,7 +143,7 @@ broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
     timesynch_set_authority_level(msg.authority_level + 1);
   }
 
-  printf("broadcast_recv: AUTHORITY_LEVEL = %d  OFFSET = %u \n\r", timesynch_authority_level(), timesynch_offset());
+  //printf("broadcast_recv: AUTHORITY_LEVEL = %d  OFFSET = %u \n\r", timesynch_authority_level(), timesynch_offset());
 
 }
 static const struct broadcast_callbacks broadcast_call = {broadcast_recv};

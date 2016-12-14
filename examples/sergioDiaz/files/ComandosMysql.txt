@@ -93,9 +93,12 @@ DROP TABLE LinkStatistics;
 //Borrar datos de una tabla
 DELETE FROM weatherData;
 DELETE FROM LinkStatistics;
+DELETE FROM LinkStatisticsPaper;
+
 
 //Reset AUTO_INCREMENT a 1
 ALTER TABLE weatherData AUTO_INCREMENT = 1;
+ALTER TABLE LinkStatisticsPaper AUTO_INCREMENT = 1;
 
 //Propiedades: Ver las propiedades de una tabla
 SHOW COLUMNS FROM weatherData;
@@ -110,6 +113,15 @@ UNION ALL
 SELECT *
 FROM LinkStatistics
 INTO OUTFILE "/var/lib/mysql-files/LinkStatistics.csv"
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+SELECT "id","nodeID","secuencia","tempC","light","RSSI","LQI","latency","date"
+UNION ALL
+SELECT *
+FROM LinkStatisticsPaper
+INTO OUTFILE "/var/lib/mysql-files/LinkStatisticsPaper.csv"
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';

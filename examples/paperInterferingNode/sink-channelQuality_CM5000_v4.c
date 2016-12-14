@@ -74,7 +74,7 @@ recv_uc(struct unicast_conn *c, const linkaddr_t *from)
   printf("%d/", envirRX.light);  // Print the light value
   printf("%d/", rss);  // Print the Received Signal Strenght Indicator (RSSI) en dBm
   printf("%d/", LQI);  // Print the Link Quality Indicator (LQI), es un valor entre 0-255
-  printf("%lu \n\r", (1000L * latency) / RTIMER_ARCH_SECOND );  // Print the Link Quality Indicator (LQI), es un valor entre 0-255
+  printf("%lu \n\r", (1000L * latency) / RTIMER_ARCH_SECOND );  // la latencia esta dada en milisegundos (ms)
 
 //  printf("unicast message received from %d.%d\n\r",
 //	 from->u8[0], from->u8[1]);
