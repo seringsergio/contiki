@@ -29,24 +29,24 @@
  * This file is part of the Contiki operating system.
  *
  */
-
+ 
 /**
  * \file
  *        Example of an interfering node
  * \author
  *        Sergio Diaz
  */
-
+ 
 #include "contiki.h"
-
+ 
 #include "/home/sink/Desktop/contiki-3.0/dev/cc2420/cc2420.h" // Include the CC2420 library
-#include "/home/sink/Desktop/contiki-3.0/dev/cc2420/cc2420_const.h"  // Include the CC2420 constants 
+#include "/home/sink/Desktop/contiki-3.0/dev/cc2420/cc2420_const.h" // Include the CC2420 constants 
 #include "/home/sink/Desktop/contiki-3.0/core/dev/spi.h" // Include basic SPI macros
-
+ 
 /*---------------------------------------------------------------------------*/
-PROCESS(modulated_carrier, "CC2420 Modulated Carrier"); // Declares the process modulated_carrier
-AUTOSTART_PROCESSES(&modulated_carrier); // Load the process on boot
-
+PROCESS(unmodulated_carrier, "CC2420 Unmodulated Carrier"); // Declares the process unmodulated_carrier
+AUTOSTART_PROCESSES(&unmodulated_carrier); // Load the process on boot
+ 
 /*---------------------------------------------------------------------------*/
 /** 
  * Writes to a register.
@@ -54,7 +54,7 @@ AUTOSTART_PROCESSES(&modulated_carrier); // Load the process on boot
  * write reg working on the Z1 / MSP430X platform
  */
 static void
-setreg(enum cc2420_register regname, uint16_t value)
+setreg(enum cc2420_register regname, uint16_t value) // Set the register of the cc2420 radio
 {
   CC2420_SPI_ENABLE();
   SPI_WRITE_FAST(regname);
@@ -64,7 +64,7 @@ setreg(enum cc2420_register regname, uint16_t value)
   SPI_WRITE(0);
   CC2420_SPI_DISABLE();
 }
-
+ 
 /* Sends a strobe */
 static void
 strobe(enum cc2420_register regname)
@@ -74,28 +74,18 @@ strobe(enum cc2420_register regname)
   CC2420_SPI_DISABLE();
 }
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(modulated_carrier, ev, data) // Defines the process modulated_carrier
+PROCESS_THREAD(unmodulated_carrier, ev, data) // Defines the process unmodulated_carrier
 {
-
+ 
   PROCESS_BEGIN();  // Says where the process starts
-
- // cc2420_set_txpower(31); 
-
-  //Reset the changes and set back the CC2420 radio chip in normal mode 
-  setreg(CC2420_MANOR, 0x0000);
-  setreg(CC2420_TOPTST, 0x0010);
-  setreg(CC2420_MDMCTRL1, 0x0500);
-  setreg(CC2420_DACTST, 0x0000);
-  strobe(CC2420_STXON);
-
-  // Creates an unmodulated carrier by setting the appropiate registers in the CC2420
-  setreg(CC2420_MANOR, 0x0100); 
+ 
+  // Creates an unmodulated carrier
+  setreg(CC2420_MANOR, 0x0100);
   setreg(CC2420_TOPTST, 0x0004);
   setreg(CC2420_MDMCTRL1, 0x0508);
   setreg(CC2420_DACTST, 0x1800);
-  strobe(CC2420_STXON);
-
+  strobe(CC2420_STXON); 
+ 
   PROCESS_END();  //Says where the process ends
 }
 /*---------------------------------------------------------------------------*/
-

@@ -107,8 +107,9 @@ PROCESS_THREAD(example_unicast_process, ev, data)
   node_id_burn(id); // Call this function to burn the defined id
   timesynch_set_authority_level(id);
   unicast_open(&uc, 146, &unicast_callbacks);
-  cc2420_set_txpower(3); //Min value. Set the output power of the node
-  
+  //cc2420_set_txpower(3); //Min value. Set the output power of the node
+  cc2420_set_txpower(31); //Set the output tx power Maxima Potencia  
+
   while(1) {
     static struct etimer et;
     linkaddr_t addr;

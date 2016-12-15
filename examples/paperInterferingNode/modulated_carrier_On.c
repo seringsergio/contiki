@@ -39,9 +39,9 @@
 
 #include "contiki.h"
 
-#include "/home/sink/Desktop/contiki-3.0/dev/cc2420/cc2420.h" // Include the CC2420 library
-#include "/home/sink/Desktop/contiki-3.0/dev/cc2420/cc2420_const.h"  // Include the CC2420 constants 
-#include "/home/sink/Desktop/contiki-3.0/core/dev/spi.h" // Include basic SPI macros
+#include "/home/sink/Desktop/contiki/dev/cc2420/cc2420.h" // Include the CC2420 library
+#include "/home/sink/Desktop/contiki/dev/cc2420/cc2420_const.h"  // Include the CC2420 constants 
+#include "/home/sink/Desktop/contiki/core/dev/spi.h" // Include basic SPI macros
 
 /*---------------------------------------------------------------------------*/
 PROCESS(modulated_carrier, "CC2420 Modulated Carrier"); // Declares the process modulated_carrier
