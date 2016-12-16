@@ -121,8 +121,13 @@ SELECT "id","nodeID","secuencia","tempC","light","RSSI","LQI","latency","date"
 UNION ALL
 SELECT *
 FROM LinkStatisticsPaper
-INTO OUTFILE "/var/lib/mysql-files/LinkStatisticsPaper.csv"
+INTO OUTFILE "/var/lib/mysql-files/LinkStatisticsPaper4.csv"
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
+cp /var/lib/mysql-files/LinkStatisticsPaper4.csv /home/sink/Desktop/contiki/examples/paperInterferingNode/Results_Paper_Interfering_Node/
+
+
+//abrir el archivo de python para guardar los datos en mysql
+python serial-mysql.py

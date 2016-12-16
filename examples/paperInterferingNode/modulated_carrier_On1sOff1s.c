@@ -42,8 +42,8 @@
 
 /*INCLUDES*/
 #include "contiki.h"
-#include "/home/sink/Desktop/contiki-3.0/dev/cc2420/cc2420_const.h" // Include the CC2420 constants 
-#include "/home/sink/Desktop/contiki-3.0/core/dev/spi.h" // Include basic SPI macros
+#include "/home/sink/Desktop/contiki/dev/cc2420/cc2420_const.h" // Include the CC2420 constants 
+#include "/home/sink/Desktop/contiki/core/dev/spi.h" // Include basic SPI macros
 #include "dev/leds.h" // Include Leds to debbug
 #include "sys/rtimer.h" //Include the real time library
 #include "sys/node-id.h" //Library to include a node id
@@ -135,8 +135,8 @@ static void carrier_On1sOff1s(struct rtimer* timer, void* ptr)
        setreg(CC2420_MDMCTRL1, 0x000C);
        strobe(CC2420_STXON);
        // Turn the leds for debug. LEDS_RED on means there is interference
-       leds_on(LEDS_RED);
-       leds_off(LEDS_GREEN);
+       //leds_on(LEDS_RED);
+       //leds_off(LEDS_GREEN);
        rtimer_set(&rtimer, RTIMER_NOW() + (RTIMER_ARCH_SECOND * 1) , 1, carrier_On1sOff1s, NULL);// Set the rtimer again to the time_next_period 
 
     }else{
@@ -149,8 +149,8 @@ static void carrier_On1sOff1s(struct rtimer* timer, void* ptr)
        setreg(CC2420_DACTST, 0x0000);
        strobe(CC2420_STXON);
        // Turn the leds for debug. LEDS_GREEN on means there is no interference
-       leds_on(LEDS_GREEN);
-       leds_off(LEDS_RED);
+       //leds_on(LEDS_GREEN);
+       //leds_off(LEDS_RED);
        rtimer_set(&rtimer, RTIMER_NOW() + (RTIMER_ARCH_SECOND * 1) , 1, carrier_On1sOff1s, NULL);// Set the rtimer again to the time_next_period
     }
     // Calculate the time of the next period ( time_next_period = R*Q(x)*CONSTANT_MICROS ) 
@@ -183,7 +183,8 @@ PROCESS_THREAD(turn_carrier_OnOff, ev, data) // Process to turn carrier on and o
 { 
   unsigned short id = 17; //Select node ID
   PROCESS_BEGIN(); // Says where the process starts
-  cc2420_set_txpower(31); //Set the output tx power
+  //cc2420_set_txpower(31); //Set the output tx power
+  cc2420_set_txpower(3); //Set the output tx power
   node_id_burn(id); //Burn node id
   //Execute the next real-time task
   rtimer_set(&rtimer, RTIMER_NOW() + RTIMER_ARCH_SECOND, 1, carrier_On1sOff1s, NULL); //Initiates the rtimer 1 second after boot
