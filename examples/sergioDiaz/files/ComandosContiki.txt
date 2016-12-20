@@ -30,8 +30,8 @@ make TARGET=sky MOTES=/dev/ttyUSB1 example-uni-temp-node.upload
 make TARGET=sky MOTES=/dev/ttyUSB2 example-uni-temp-nodeInterferencia.upload
 
 
-make MOTES=/dev/ttyUSB2 node-environment_CM5000_v4.upload && make login MOTES=/dev/ttyUSB2
-make MOTES=/dev/ttyUSB1 sink-channelQuality_CM5000_v4.upload && make login MOTES=/dev/ttyUSB1
+make MOTES=/dev/ttyUSB2 node-environment_CM5000_v5.upload && make login MOTES=/dev/ttyUSB2
+make MOTES=/dev/ttyUSB1 sink-channelQuality_CM5000_v5.upload && make login MOTES=/dev/ttyUSB1
 make MOTES=/dev/ttyUSB4 modulated_carrier_On1sOff1s.upload
 
 //PARA programar
