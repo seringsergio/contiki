@@ -49,7 +49,7 @@ make login MOTES=/dev/ttyUSB0
 cd /home/sink/Desktop/contiki-3.0/examples/rssi-scanner
 make TARGET=sky MOTES=/dev/ttyUSB1 rssi-scanner-cc2420.upload
 javac ViewRSSI.java
-make login MOTES=/dev/ttyUSB1 | java ViewRSSI
+make login MOTES=/dev/ttyUSB0 | java ViewRSSI
 
 //Recordar como no sale el error de wrong password
 make  TARGET=sky node-environment.upload
