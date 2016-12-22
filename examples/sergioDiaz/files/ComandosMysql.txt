@@ -61,7 +61,7 @@ RSSI  INT(4) NOT NULL,
 LQI   INT(4) NOT NULL
 );
 
-create table LinkStatisticsPaper (
+create table LinkStatisticsPaper2 (
 id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 nodeID DECIMAL(5,2) NOT NULL, 
 secuencia INT(11) NOT NULL,
@@ -105,6 +105,7 @@ ALTER TABLE LinkStatisticsPaper AUTO_INCREMENT = 1;
 SHOW COLUMNS FROM weatherData;
 SHOW COLUMNS FROM LinkStatistics;
 SHOW COLUMNS FROM LinkStatisticsPaper;
+SHOW COLUMNS FROM LinkStatisticsPaper2;
 
 //Sacar datos en un csv file.Get a csv file. 
 
@@ -122,12 +123,12 @@ SELECT "id","nodeID","secuencia","tempC","light","RSSI","LQI","latency","date"
 UNION ALL
 SELECT *
 FROM LinkStatisticsPaper
-INTO OUTFILE "/var/lib/mysql-files/LinkStatisticsPaperV2_6.csv"
+INTO OUTFILE "/var/lib/mysql-files/LinkStatisticsPaperV2_9.csv"
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
-cp /var/lib/mysql-files/LinkStatisticsPaperV2_6.csv /home/sink/Desktop/contiki/examples/paperInterferingNode/Results_Paper_Interfering_Node/
+cp /var/lib/mysql-files/LinkStatisticsPaperV2_9.csv /home/sink/Desktop/contiki/examples/paperInterferingNode/Results_Paper_Interfering_Node/
 
 
 //abrir el archivo de python para guardar los datos en mysql
