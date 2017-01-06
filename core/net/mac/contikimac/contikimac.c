@@ -186,11 +186,10 @@ static int we_are_receiving_burst = 0;
 #endif
 
 
-
-
 /* STROBE_TIME is the maximum amount of time a transmitted packet
    should be repeatedly transmitted as part of a transmission. */
 #define STROBE_TIME                        (CYCLE_TIME + 2 * CHECK_TIME)
+
 
 /* GUARD_TIME is the time before the expected phase of a neighbor that
    a transmitted should begin transmitting packets. */

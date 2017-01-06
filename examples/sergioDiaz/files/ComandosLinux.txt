@@ -1,7 +1,7 @@
 #Comandos linux
 
 //Buscar: Buscar archivos en linux
-find / -type f -name "*.conf"
+find /home/sink/Desktop/contiki/ -type f -name "*.conf"
 
 //Buscar directorios en linux
 find /  -type d  -name "rssi-scanner"
