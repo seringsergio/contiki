@@ -19,6 +19,9 @@
 //#undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
 //#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 128
 
+//#undef CSMA_CONF_MAX_BACKOFF
+//#define CSMA_CONF_MAX_BACKOFF 20
+
 //Define the channel to be used
 #define RF_CHANNEL 20
 
