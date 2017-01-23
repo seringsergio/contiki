@@ -123,13 +123,17 @@ SELECT "id","nodeID","secuencia","tempC","light","RSSI","LQI","latency","date"
 UNION ALL
 SELECT *
 FROM LinkStatisticsPaper
-INTO OUTFILE "/var/lib/mysql-files/LinkStatisticsPaperV2_19_3.csv"
+INTO OUTFILE "/var/lib/mysql-files/LinkStatisticsPaperV3_21_2.csv"
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
-cp /var/lib/mysql-files/LinkStatisticsPaperV2_19_3.csv /home/sink/Desktop/contiki/examples/paperInterferingNode/Results_Paper_Interfering_Node/
+cp /var/lib/mysql-files/LinkStatisticsPaperV3_21_2.csv /home/sink/Desktop/contiki/examples/paperInterferingNode/Results_Paper_Interfering_Node/
 
 
-//abrir el archivo de python para guardar los datos en mysql
+//abrir el archivo de python para guardar 
+los datos en mysql
 python serial-mysql.py
+
+
+DELETE FROM LinkStatisticsPaper; ALTER TABLE LinkStatisticsPaper AUTO_INCREMENT = 1; select * from LinkStatisticsPaper;
